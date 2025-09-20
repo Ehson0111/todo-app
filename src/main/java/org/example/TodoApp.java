@@ -9,7 +9,7 @@ public class TodoApp {
     public static void main(String[] args) {
 
         TodoList list = new TodoList();
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);///sdfdf
         System.out.println("Simple Todo CLI. Commands: add <task>, remove <index>, list, exit");
 
 
