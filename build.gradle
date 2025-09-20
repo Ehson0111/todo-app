@@ -1,23 +1,21 @@
 plugins {
     id 'java'
-    id 'maven-publish'
     id 'application'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
-
+    id 'maven-publish'
 }
 
 group = 'org.example'
-//version = '1.0-SNAPSHOT'
 version = findProperty('version') ?: '0.1.0'
 
-sourceCompatibility='23'
+java {
+    sourceCompatibility = JavaVersion.VERSION_23
+    targetCompatibility = JavaVersion.VERSION_23
+}
 
-targetCompatibility= '23'
-
-mainClassName='org.example.TodoApp'
-
-
-
+application {
+    mainClassName = 'org.example.TodoApp'
+}
 
 repositories {
     mavenCentral()
@@ -33,65 +31,41 @@ test {
     useJUnitPlatform()
 }
 
-
-shadowJar{
+shadowJar {
     archiveBaseName.set('todo-app')
     archiveClassifier.set('')
     archiveVersion.set(project.version.toString())
     mergeServiceFiles()
 }
 
-tasks.jar {
-    enabled=false
-}
-
-tasks.named('distZip'){
-    dependsOn tasks.named('shadowJar')
-
-}
-
-tasks.named('distTar'){
-    dependsOn tasks.named('shadowJar')
-
-}
-tasks.named('startScripts'){
-    dependsOn tasks.named('shadowJar')
-
-}
-tasks.named('startShadowScripts'){
-    dependsOn tasks.named('jar')
+jar {
+    enabled = false
 }
 
 tasks.build {
     dependsOn shadowJar
 }
 
-
 publishing {
-    publications{
-        mavenJava(MavenPublications) {
-            groupId= 'org.example'
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'org.example'
             artifactId = 'todo-app'
+            version = project.version
 
-            version=project.version
-
-            artifact (tasks.shadowJar){
-                classifier=null
-
+            artifact(tasks.shadowJar) {
+                classifier = null
             }
-
-
         }
     }
     repositories {
         maven {
-            name="GitHubPackages"
-            url=uri("https://maven.pkg.github.com/Ehson011/todo-app")
-            credentials{
-                username=project.findProperty("gpr.user") ?:System.getenv("GITHUB_ACTOR")
-                password =project.findProperty("gpr.key") ?:System.getenv("GITHUB_TOKEN")
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/Ehson011/todo-app")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
             }
-
         }
     }
 }
