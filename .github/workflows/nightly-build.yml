@@ -3,7 +3,7 @@ name: Nightly Build
 on:
   schedule:
     # Запускается каждый день в 2:00 UTC (5:00 по Москве)
-    - cron: '35 11 * * *'
+    - cron: '50 11 * * *'
   workflow_dispatch:
 
 jobs:
